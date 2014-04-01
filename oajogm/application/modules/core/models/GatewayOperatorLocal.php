@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * Clase que implementará la interfaz de operaciones sobre el gateway 
+ * llamando al broker de control del gateway usando un exec local
+ * 
+ * @category OAJogm
+ * @package Core
+ * @subpackage Models
+ * @author luis
+ */
+class Core_Model_GatewayOperatorLocal 
+    implements Core_Model_GatewayOperatorInterface
+{
+
+    const SUDO = "/usr/bin/sudo";
+    const OVPNSERVICE = "oajog_ovpnservice.sh";
+    const OVPNMGMT = "oajog_ovpnmgmt.sh";
+    const IPTABLESCFG = "oajog_iptablescfg.sh";
+    
+    /** @var string */
+    protected static $_pathCommand;
+    
+    
+    public static function setPathCommand($pathCommand) {
+        self::$_pathCommand = $pathCommand;
+    }
+
+    /** 
+     * Path al comando que implementa el broker de control en el servidor local
+     * 
+     */
+    public function __construct() {
+
+    }
+    
+    /**
+     * @param string $name
+     */
+    public function disconnectClient($name) {
+        $cmdExec = self::$_pathCommand."/".self::OVPNMGMT." disconnect $name";
+        $output = array();
+        exec($cmdExec, $output, $exitStatus);
+        if($exitStatus != 0) {
+            throw new Core_Model_Exception("Error enviando desconexion");
+        }
+        foreach($output as $linea) {
+            if(preg_match('/SUCCESS/', $linea)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     *  @return array[]
+     */
+    public function getConnectedClients() {
+        
+        $cmdExec = self::$_pathCommand."/".self::OVPNMGMT." list";
+        $output = array();
+        exec($cmdExec, $output, $exitStatus);
+        if($exitStatus != 0) {
+            throw new Core_Model_Exception("Error obteniendo clientes conectados");
+        }
+        $startList = false;
+        $clients = array();
+        foreach($output as $linea) {
+            if(preg_match('/^>/', $linea)) {
+                continue;
+            }
+            if(preg_match('/^ROUTING TABLE/', $linea)) {
+                break;
+            }
+            if(preg_match('/^Common Name,Real Address/', $linea)) {
+                $startList = true;
+            } else {
+                if($startList) {
+                    $datos = explode(",", $linea);
+                    $clients[] = array(
+                        'cn' => $datos[0],
+                        'real_address' => $datos[1],
+                        'bytes_received' => $datos[2],
+                        'bytes_sent' => $datos[3],
+                        'connected_since' => $datos[4]
+                    );
+                }
+            }
+        }
+        return $clients;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function reloadIptablesRules() {
+        $cmdExec = self::SUDO." ".self::$_pathCommand."/".self::IPTABLESCFG." reload";
+        $output = array();
+        exec($cmdExec, $output, $exitStatus);
+        if($exitStatus != 0) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function start() {
+        $cmdExec = self::SUDO." ".self::$_pathCommand."/".self::OVPNSERVICE." start";
+        $output = array();
+        exec($cmdExec, $output, $exitStatus);
+        if($exitStatus != 0) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function stop() {
+        $cmdExec = self::SUDO." ".self::$_pathCommand."/".self::OVPNSERVICE." stop";
+        $output = array();
+        exec($cmdExec, $output, $exitStatus);
+        if($exitStatus != 0) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isRunning() {
+        $cmdExec = self::SUDO." ".self::$_pathCommand."/".self::OVPNSERVICE." status";
+        $output = array();
+        exec($cmdExec, $output, $exitStatus);
+        if($exitStatus != 0) {
+            return false;
+        }
+        
+        return true;
+    }
+}
+
