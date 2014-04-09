@@ -1,0 +1,44 @@
+<h1><?php echo $this->iconMgr("DISCONNECT_CLIENT").$this->actionTitle; ?></h1>
+
+<?php if(count($this->clients) > 0) : ?>
+<table class="center">
+    <tr>
+        <th>Nombre</th>
+        <th>Conectado</th>
+        <th>IP real</th>
+        <th>Bytes recibidos</th>
+        <th>Bytes enviados</th>
+        <th>Desconectar</th>
+    </tr>
+
+<?php foreach($this->clients as $client): ?>
+    <tr>
+        <td><?php echo $client['cn']; ?></td>
+        <td><?php echo $client['connected_since']; ?></td>
+        <td><?php echo $client['real_address']; ?></td>
+        <td><?php echo $client['bytes_received']; ?></td>
+        <td><?php echo $client['bytes_sent']; ?></td>
+        <td>
+            <a onclick="return confirm('Está seguro de que desea desconectar al cliente')"
+               href="<?php echo $this->baseUrl()."/webmanage/gateway/disconnectclient/name/".
+                       $client['cn']; ?>"><?php echo $this->iconMgr("DELETE") ?>
+            </a>
+        </td>
+    </tr>
+<?php endforeach; ?>
+</table>
+<?php else: ?>
+No hay clientes conectados
+<?php endif; ?>
+
+<p/>
+
+<div class="actions">
+    <ul>
+        <li><?php echo $this->iconMgr("BACK") ?>
+            <a href="<?php echo $this->baseUrl()."/webmanage/gateway/managestatus"; ?>">
+                Volver
+            </a>
+        </li>
+    </ul>
+</div>

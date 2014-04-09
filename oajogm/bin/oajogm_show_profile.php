@@ -43,7 +43,6 @@ if(empty($profile)) {
     exit(2);
 }
 
-echo "id: ".$profile['id']."\n";
 echo "name: ".$profile['name']."\n";
 echo "desc: ".$profile['desc']."\n";
 echo "created: ".$profile['audit_info']['created']."\n";
@@ -52,7 +51,6 @@ echo "updated: ".$profile['audit_info']['updated']."\n";
 echo "updated_by: ".$profile['audit_info']['updated_by']."\n";
 echo "resources: \n";
 foreach($profile['resources'] as $resource) {
-    $line = $resource['id']."\t";
     $line.= $resource['name']."\t";
     $line.= $resource['type']."\t";
     $line.= $resource['desc']."\n";

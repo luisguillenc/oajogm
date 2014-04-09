@@ -1,0 +1,56 @@
+<h1><?php echo $this->iconMgr("CLIENT").$this->actionTitle; ?></h1>
+
+<?php if(count($this->clients) > 0) : ?>
+<table class="center">
+    <tr>
+        <th>Nombre</th>
+        <th>Perfil</th>
+        <th>VPN Ip</th>
+        <th>Bloqueado</th>
+        <th>Log iptables</th>
+        <th>Descripción</th>
+        <th colspan="2">Acciones</th>
+    </tr>
+
+<?php foreach($this->clients as $client): ?>
+    <tr>
+        <td><?php echo $client['name']; ?></td>
+        <td><?php echo $client['prfname']; ?></td>
+        <td><?php echo $client['ipaddr']; ?></td>
+    <?php if($client['locked']): ?>
+        <td>Sí</td>
+    <?php else: ?>
+        <td>No</td>
+    <?php endif; ?>
+    <?php if($client['iptableslogged']): ?>
+        <td>Sí</td>
+    <?php else: ?>
+        <td>No</td>
+    <?php endif; ?>
+        <td><?php echo $client['desc']; ?></td>
+
+        <td><a href="<?php echo $this->baseUrl().
+                "/webmanage/accessclient/modify/name/".$client['name'];
+        ?>"><?php echo $this->iconMgr("UPDATE") ?></a></td>
+        <td>
+            <a onclick="return confirm('Está seguro de que desea eliminar el perfil')"
+               href="<?php echo $this->baseUrl()."/webmanage/accessclient/remove/name/".
+                       $client['name']; ?>"><?php echo $this->iconMgr("DELETE") ?>
+            </a>
+        </td>
+    </tr>
+<?php endforeach; ?>
+</table>
+<?php else: ?>
+No hay clientes
+<?php endif; ?>
+
+<p/>
+
+<div class="actions">
+    <ul>
+        <li>
+            <?php echo $this->iconMgr("NEW") ?> <a href="<?php echo $this->baseUrl()."/webmanage/accessclient/create"?>">Crear nuevo cliente</a>
+        </li>
+    </ul>
+</div>

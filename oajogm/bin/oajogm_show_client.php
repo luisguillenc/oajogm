@@ -45,7 +45,7 @@ if(empty($client)) {
 
 echo "name: ".$client['name']."\n";
 echo "desc: ".$client['desc']."\n";
-echo "profile: ".$client['profile']."\n";
+echo "profile: ".$client['prfname']."\n";
 echo "ipaddr: ".$client['ipaddr']."\n";
 if($client['locked']) {
     echo "locked: yes\n";

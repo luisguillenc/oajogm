@@ -1,0 +1,44 @@
+<h1><?php echo $this->iconMgr("VIEW_LOG").$this->actionTitle; ?></h1>
+
+<form>
+    <table>
+        <tr>
+            <td>Últimas acciones</td>
+            <td><input type="text" name="number" 
+                       value="<?php echo $this->number; ?>"/>
+            </td>
+            <td><input type="submit" value="Ver"/></td>
+        </tr>
+    </table>
+</form>
+<?php if(count($this->lastEvents) > 0) : ?>
+<table class="center">
+    <tr>
+        <th>Fecha</th>
+        <th>Administrador</th>
+        <th>Acción</th>
+    </tr>
+
+<?php foreach($this->lastEvents as $event): ?>
+    <tr>
+        <td><?php echo $event['timestamp']; ?></td>
+        <td><?php echo $event['username']; ?></td>
+        <td><?php echo $event['action']; ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+<?php else: ?>
+No hay acciones
+<?php endif; ?>
+
+<p/>
+
+<div class="actions">
+    <ul>
+        <li><?php echo $this->iconMgr("BACK") ?>
+            <a href="<?php echo $this->baseUrl()."/webmanage/gateway/managestatus"; ?>">
+                Volver
+            </a>
+        </li>
+    </ul>
+</div>

@@ -54,8 +54,8 @@ class Core_Model_SubnetNetworkResource
      */
     public function toArray() {
         $data = parent::toArray();
-        $data['network_addr'] = $this->_subnet->getNetAddress()->__toString();
-        $data['network_mask'] = $this->_subnet->getNetMask()->__toString();
+        $data['netaddr'] = $this->_subnet->getNetAddress()->__toString();
+        $data['netmask'] = $this->_subnet->getNetMask()->__toString();
         
         return $data;
     }

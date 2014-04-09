@@ -52,7 +52,7 @@ class Core_Model_HostNetworkResource
      */
     public function toArray() {
         $data = parent::toArray();
-        $data['ip'] = $this->_ip->__toString();
+        $data['ipaddr'] = $this->_ip->__toString();
         
         return $data;
     }

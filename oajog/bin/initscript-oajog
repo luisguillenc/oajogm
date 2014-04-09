@@ -1,0 +1,44 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          oajog
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Init script de oajog
+# Description:       Inicializa OAJog, este script asume que OAJogm está
+#                    en la misma máquina, por lo que requiere la carga previa
+#                    de apache y mysql
+### END INIT INFO
+
+# Author: Luis Guillén <luisguillenc@gmail.com>
+
+OAJOG_PATH=/usr/local/oajog
+case "$1" in
+	start)
+		$OAJOG_PATH/bin/oajog_iptablescfg.sh reload
+		if [ $? -ne 0 ]; then
+			echo "Error iniciando reglas iptables"
+			exit 1
+		fi
+		$OAJOG_PATH/bin/oajog_ovpnservice.sh start
+		if [ $? -ne 0 ]; then
+			echo "Error iniciando servicio openvpn"
+			exit 1
+		fi
+		;;
+	stop)
+		$OAJOG_PATH/bin/oajog_iptablescfg.sh failsafe
+		if [ $? -ne 0 ]; then
+			echo "Error cargando iptables failsafe"
+			exit 1
+		fi
+
+		$OAJOG_PATH/bin/oajog_ovpnservice.sh stop
+		if [ $? -ne 0 ]; then
+			echo "Error deteniendo openvpn"
+			exit 1
+		fi
+		;;
+esac
+

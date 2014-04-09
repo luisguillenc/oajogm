@@ -42,13 +42,16 @@ class Core_Service_GatewayManager {
      * @return array[]
      */
     public function showClients() {
-        return $this->_operatorGw->getConnectedClients();
+        try {
+            return $this->_operatorGw->getConnectedClients();
+        } catch (Core_Model_Exception $ex) {
+            throw new Core_Service_Exception($ex->getMessage());
+        }
     }
     
     /**
      * 
      * @param array $args
-     * @return boolean true si éxito
      */
     public function disconnectClient($args) {
         if(!isset($args['name'])) {
@@ -57,60 +60,94 @@ class Core_Service_GatewayManager {
 
         $name = $args['name'];
         
-        Core_Model_AuditHelper::log("Desconectar cliente", $name);
-
+        $exists = false;
         $success = false;
         $connected = $this->_operatorGw->getConnectedClients();
         foreach($connected as $client) {
             if($client['cn'] == $name) {
-                $success = $this->_operatorGw->disconnectClient($name);
+                $exists = true;
+                try {
+                    $success = $this->_operatorGw->disconnectClient($name);
+                } catch (Core_Model_Exception $ex) {
+                    throw new Core_Service_Exception($ex->getMessage());
+                }
             }
         }
-
-        return $success;
+        
+        if(!$exists) {
+            throw new Core_Service_Exception("El cliente no se encontraba conectado");
+        }
+        
+        if($exists && !$success) {
+            throw new Core_Service_Exception("No se recibió notificación de éxito");
+        }
+        
+        Core_Model_AuditHelper::log("Desconectado cliente $name", $name);
     }
     
     /**
      * Habilita los accesos al gateway
      */
     public function enableAccess() {
-        Core_Model_AuditHelper::log("Habilitar acceso al gateway");
         $this->_gateway->enableAccess();
+        Core_Model_AuditHelper::log("Habilitado acceso al gateway");
     }
     
     /**
      * Deshabilita los accesos al gateway
      */
     public function disableAccess() {
-        Core_Model_AuditHelper::log("Deshabilitar acceso al gateway");
         $this->_gateway->disableAccess();
+        Core_Model_AuditHelper::log("Deshabilitado acceso al gateway");
     }
     
     /**
      * Recarga las reglas iptables en el gateway
-     * @return boolean true si éxito
      */
     public function reloadIptablesRules() {
-        Core_Model_AuditHelper::log("Recargar reglas iptables");
-        return $this->_operatorGw->reloadIptablesRules();
+        try {
+            $status = $this->_operatorGw->reloadIptablesRules();
+        } catch (Core_Model_Exception $ex) {
+            throw new Core_Service_Exception($ex->getMessage());
+        }
+
+        if(!$status) {
+            throw new Core_Service_Exception("Error cargando reglas iptables");
+        }
+        
+        Core_Model_AuditHelper::log("Recargadas reglas iptables");
     }
     
     /**
      * Inicializa el servidor vpn del gateway
-     * @return boolean true si éxito
      */
     public function start() {
-        Core_Model_AuditHelper::log("Iniciar servidor vpn");
-        return $this->_operatorGw->start();
+        try {
+            $status = $this->_operatorGw->start();
+        } catch (Core_Model_Exception $ex) {
+            throw new Core_Service_Exception($ex->getMessage());
+        }
+
+        if(!$status) {
+            throw new Core_Service_Exception("Error iniciando servidor");
+        }
+        Core_Model_AuditHelper::log("Iniciado servidor vpn");
     }
     
     /**
      * Detiene el servidor vpn del gateway
-     * @return boolean true si éxito
      */
     public function stop() {
-        Core_Model_AuditHelper::log("Detener servidor vpn");
-        return $this->_operatorGw->stop();
+        try {
+            $status = $this->_operatorGw->stop();
+        } catch (Core_Model_Exception $ex) {
+            throw new Core_Service_Exception($ex->getMessage());
+        }
+
+        if(!$status) {
+            throw new Core_Service_Exception("Error deteniendo servidor");
+        }
+        Core_Model_AuditHelper::log("Detenido servidor vpn");
     }
     
     /**
@@ -119,9 +156,18 @@ class Core_Service_GatewayManager {
      */
     public function status() {
         $status = array();
-        $status['service_ip'] = $this->_gateway->getServiceIp();
+        $status['service_ip'] = $this->_gateway->getServiceIp()->__toString();
+        $status['vpn_network'] = $this->_gateway->getVpnNetwork()->getNetAddress()->__toString();
+        $status['routed_networks'] = array();
+        foreach($this->_gateway->getRoutedNetworks() as $routedNet) {
+            $status['routed_networks'][] = $routedNet->__toString();
+        }
         $status['access_status'] = $this->_gateway->getAccessStatus();
-        $status['vpn_service'] = $this->_operatorGw->isRunning();
+        try {
+            $status['vpn_service'] = $this->_operatorGw->isRunning();
+        } catch (Core_Model_Exception $ex) {
+            throw new Core_Service_Exception($ex->getMessage());
+        }
         
         return $status;
     }
@@ -137,7 +183,7 @@ class Core_Service_GatewayManager {
         }
         
         return $this->_cnLogger->getLastLogins();
-        
+
     }
     
     /**
@@ -166,6 +212,29 @@ class Core_Service_GatewayManager {
         }
         
         return Core_Model_AuditHelper::getEvents();
+    }
+
+    
+    /**
+     * 
+     * @param array $args
+     * @return string
+     * @throws Core_Service_Exception
+     */
+    public function viewIptablesLog($args) {
+        if(isset($args['number'])) {
+            $number = $args['number'];
+        } else {
+            $number = 0;
+        }
+
+        try {
+            $strLog = $this->_operatorGw->viewIptablesLog($number);
+        } catch (Core_Model_Exception $ex) {
+            throw new Core_Service_Exception($ex->getMessage());
+        }
+        
+        return $strLog;
     }
 
 }

@@ -55,5 +55,12 @@ interface Core_Model_GatewayOperatorInterface {
      */
     public function isRunning();
     
+    /**
+     * Retorna las últimas líneas del log iptables
+     * 
+     * @return string
+     */
+    public function viewIptablesLog($number);
+    
 }
 

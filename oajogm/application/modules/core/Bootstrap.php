@@ -7,6 +7,7 @@ class Core_Bootstrap extends Zend_Application_Module_Bootstrap {
         // inicializo variables
         $pathsCfg = Zend_Registry::get("pathsCfg");
         $gatewayCfg = Zend_Registry::get("gatewayCfg");
+        $operatorCfg = Zend_Registry::get("operatorCfg");
         
         $serviceIp = new Core_Model_IPAddress($gatewayCfg->serviceip);
         $a_vpnNet = explode("/", $gatewayCfg->vpnnet);
@@ -52,9 +53,16 @@ class Core_Bootstrap extends Zend_Application_Module_Bootstrap {
         $auditLogger = new Core_Model_AuditLoggerDb();
         Core_Model_AuditHelper::setLogger($auditLogger);
 
+        // construyo operador
         Core_Model_GatewayOperatorLocal::setPathCommand($pathsCfg->oajogpath);
-        $operatorGw = new Core_Model_GatewayOperatorLocal();
-        
+        if($operatorCfg->type == "local") {
+            $operatorGw = new Core_Model_GatewayOperatorLocal();
+        } else {
+            $sshOpts = $operatorCfg->ssh->toArray();
+            Core_Model_GatewayOperatorSsh::setPathSshKeys($pathsCfg->sshkeys);
+            $operatorGw = new Core_Model_GatewayOperatorSsh($sshOpts);
+        }
+
         
         //inicializamos las clases del model
         $networkResourceRepository = 

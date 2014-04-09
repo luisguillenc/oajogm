@@ -44,10 +44,15 @@ class Core_Service_AccessClientManager {
     /**
      * @param string $clientName
      * @param string $profileName
+     * @param bool $locked
+     * @param bool $iptableslogged
      * @param string $desc
      * @return Core_Model_AccessClient
      */
-    protected function _createClient($clientName, $profileName, $desc = "") {
+    protected function _createClient(
+            $clientName, $profileName, 
+            $locked = true, $iptableslogged = false, $desc = ""
+            ) {
         if($this->_existsName($clientName)) {
             throw new Core_Service_Exception("Ya existe un cliente con ese nombre");
         }
@@ -64,10 +69,22 @@ class Core_Service_AccessClientManager {
         
         $client = $this->_factory->createAccessClient($clientName, $vpnIp, $profile);
         $client->setDesc($desc);
+
+        if($locked) {
+            $client->lock();
+        } else {
+            $client->unlock();
+        }
+        
+        if($iptableslogged) {
+            $client->enableIptablesLog();
+        } else {
+            $client->disableIptablesLog();
+        }
         
         Core_Model_AuditHelper::createInfo($client);
         $this->_repository->persist($client);
-        Core_Model_AuditHelper::log("Creado cliente" , $client->toArray());
+        Core_Model_AuditHelper::log("Creado cliente $clientName" , $client->toArray());
         
         return $client;
     }
@@ -104,7 +121,7 @@ class Core_Service_AccessClientManager {
         
         $this->_repository->remove($client);
         $this->_vpnIpPooler->release($vpnIp);
-        Core_Model_AuditHelper::log("Eliminado cliente" , $name);
+        Core_Model_AuditHelper::log("Eliminado cliente $name" , $name);
     }
     
     /**
@@ -117,7 +134,7 @@ class Core_Service_AccessClientManager {
         
         Core_Model_AuditHelper::updateInfo($client);
         $this->_repository->persist($client);
-        Core_Model_AuditHelper::log("Bloqueado cliente" , $name);
+        Core_Model_AuditHelper::log("Bloqueado cliente $name" , $name);
         
         return $client;
     }
@@ -132,7 +149,7 @@ class Core_Service_AccessClientManager {
         
         Core_Model_AuditHelper::updateInfo($client);
         $this->_repository->persist($client);
-        Core_Model_AuditHelper::log("Desbloqueado cliente" , $name);
+        Core_Model_AuditHelper::log("Desbloqueado cliente $name" , $name);
         
         return $client;
     }
@@ -147,7 +164,7 @@ class Core_Service_AccessClientManager {
         
         Core_Model_AuditHelper::updateInfo($client);
         $this->_repository->persist($client);
-        Core_Model_AuditHelper::log("Habilitado log iptables de cliente", $name);
+        Core_Model_AuditHelper::log("Habilitado log iptables de cliente $name", $name);
         
         return $client;
     }
@@ -162,7 +179,7 @@ class Core_Service_AccessClientManager {
         
         Core_Model_AuditHelper::updateInfo($client);
         $this->_repository->persist($client);
-        Core_Model_AuditHelper::log("Deshabilitado log iptables de cliente", $name);
+        Core_Model_AuditHelper::log("Deshabilitado log iptables de cliente $name", $name);
         
         return $client;
     }
@@ -181,6 +198,12 @@ class Core_Service_AccessClientManager {
     }
 
     /**
+     * args:
+     *      name
+     *      desc
+     *      prfname
+     *      locked
+     *      iptableslogged
      * 
      * @param array $args
      * @return array
@@ -190,18 +213,36 @@ class Core_Service_AccessClientManager {
             throw new Core_Service_Exception("Falta argumento");
         }
         
-        if(!isset($args['desc'])) {
-            $client = $this->_createClient($args['name'], $args['prfname']);
+        $name = $args['name'];
+        $prfname = $args['prfname'];
+        if(isset($args['desc'])) {
+            $desc = $args['desc'];
         } else {
-            $client = $this->_createClient(
-                    $args['name'], $args['prfname'], $args['desc']
-                    );
+            $desc= "";
+        }
+        if(isset($args['locked'])) {
+            $locked = $args['locked'];
+        } else {
+            $locked = true;
+        }
+        if(isset($args['iptableslogged'])) {
+            $iptableslogged = $args['iptableslogged'];
+        } else {
+            $iptableslogged = false;
         }
         
+        $client = $this->_createClient($name, $prfname, $locked, $iptableslogged, $desc);
+
         return $client->toArray();
     }
     
     /**
+     * args:
+     *      name
+     *      desc
+     *      prfname
+     *      locked
+     *      iptableslogged
      * 
      * @param array $args
      * @return array
@@ -212,9 +253,6 @@ class Core_Service_AccessClientManager {
         }
         $client = $this->_findClient($args['name']);
 
-        if(isset($args['desc'])) {
-            $client->setDesc($args['desc']);
-        }
         if(isset($args['prfname'])) {
             $profile = $this->_profileFinder->findByName($args['prfname']);
             if(empty($profile)) {
@@ -222,15 +260,34 @@ class Core_Service_AccessClientManager {
             }
             $client->setProfile($profile);
         }
+        if(isset($args['desc'])) {
+            $client->setDesc($args['desc']);
+        }
+        if(isset($args['locked'])) {
+            if($args['locked']) {
+                $client->lock();
+            } else {
+                $client->unlock();
+            }
+        }
+        if(isset($args['iptableslogged'])) {
+            if($args['iptableslogged']) {
+                $client->enableIptablesLog();
+            } else {
+                $client->disableIptablesLog();
+            }
+        }
 
         Core_Model_AuditHelper::updateInfo($client);
         $this->_repository->persist($client);
-        Core_Model_AuditHelper::log("Cliente modificado", $client->toArray());
+        Core_Model_AuditHelper::log("Cliente modificado ".$client->getName(), $client->toArray());
         
         return $client->toArray();
     }
 
     /**
+     * args:
+     *      name
      * 
      * @param array $args
      * @return array
@@ -245,6 +302,8 @@ class Core_Service_AccessClientManager {
     }
     
     /**
+     * args:
+     *      name
      * 
      * @param array $args
      */
@@ -258,6 +317,8 @@ class Core_Service_AccessClientManager {
 
     
     /**
+     * args:
+     *      name
      * 
      * @param array $args
      * @return array
@@ -272,6 +333,8 @@ class Core_Service_AccessClientManager {
     }
     
     /**
+     * args:
+     *      name
      * 
      * @param array $args
      * @return array
@@ -286,6 +349,8 @@ class Core_Service_AccessClientManager {
     }
     
     /**
+     * args:
+     *      name
      * 
      * @param array $args
      * @return array
@@ -300,6 +365,8 @@ class Core_Service_AccessClientManager {
     }
     
     /**
+     * args:
+     *      name
      * 
      * @param array $args
      * @return array

@@ -1,0 +1,186 @@
+<h1><?php echo $this->iconMgr("GATEWAY") ?><?php echo $this->actionTitle; ?></h1>
+
+<script>
+    function start_vpn_server() {
+        this.document.location.href ="<?php
+            echo $this->baseUrl()."/webmanage/gateway/start";
+            ?>"
+    }
+
+    function stop_vpn_server() {
+        this.document.location.href ="<?php
+            echo $this->baseUrl()."/webmanage/gateway/stop";
+            ?>"
+    }
+    
+    function enable_access() {
+        this.document.location.href ="<?php
+            echo $this->baseUrl()."/webmanage/gateway/enableaccess";
+            ?>"
+    }
+
+    function disable_access() {
+        this.document.location.href ="<?php
+            echo $this->baseUrl()."/webmanage/gateway/disableaccess";
+            ?>"
+    }
+    
+    function view_connections() {
+        this.document.location.href ="<?php
+            echo $this->baseUrl()."/webmanage/gateway/listconnections";
+            ?>"
+    }
+    
+    function view_last_connections() {
+        this.document.location.href ="<?php
+            echo $this->baseUrl()."/webmanage/gateway/listlastlogins";
+            ?>"
+    }
+
+    function view_audit_events() {
+        this.document.location.href ="<?php
+            echo $this->baseUrl()."/webmanage/gateway/listauditevents";
+            ?>"
+    }
+
+    function view_iptables_log() {
+        this.document.location.href ="<?php
+            echo $this->baseUrl()."/webmanage/gateway/listiptableslog";
+            ?>"
+    }
+
+
+    function reload_iptables() {
+        this.document.location.href ="<?php
+            echo $this->baseUrl()."/webmanage/gateway/reloadiptablesrules";
+            ?>"
+    }
+
+
+</script>
+<table>
+    <tr>
+        <td colspan="2">
+            <center><strong>Información de la configuración</strong></center>
+        </td>
+    </tr>
+    <tr>
+        <td>Dirección servicio</td>
+        <td><input type="text" readonly="true" value="<?php echo $this->status['service_ip']; ?>" /></td>
+    </tr>
+    <tr>
+        <td>Dirección de red de VPN</td>
+        <td><input type="text" readonly="true" value="<?php echo $this->status['vpn_network']; ?>" /></td>
+    </tr>
+    <tr>
+        <td>Redes publicadas</td>
+        <td>
+            <select multiple="true" readonly="true">
+                <?php foreach($this->status['routed_networks'] as $network): ?>
+                <option><?php echo $network; ?></option>
+                <?php endforeach; ?>
+            </select>
+            
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <center>
+            <input type="button" value="Histórico de auditoría" onclick="view_audit_events();" 
+                />
+            </center>
+        </td>
+    </tr>
+
+    <tr><td colspan="2">&nbsp;</td></tr>
+    
+    <tr>
+        <td colspan="2">
+            <center><strong>Estado del servidor VPN</strong></center>
+        </td> 
+    </tr>
+    <tr>
+        <td>
+            <center>
+            <input type="button" value="Iniciar" onclick="start_vpn_server();" 
+            <?php if($this->status['vpn_service']){ echo 'disabled="true"'; }?>
+                />
+            </center>
+        </td>
+        <td>
+            <center>
+            <input type="button" value="Detener" onclick="stop_vpn_server();"
+            <?php if(!$this->status['vpn_service']){ echo 'disabled="true"'; }?>                   
+                   />
+            </center>
+        </td>
+    </tr>
+
+    <tr><td colspan="2">&nbsp;</td></tr>
+    
+    <tr>
+        <td colspan="2">
+            <center><strong>Conexiones al gateway</strong></center>
+        </td> 
+    </tr>
+    <tr>
+        <td>
+            <center>
+            <input type="button" value="Habilitar" onclick="enable_access();" 
+            <?php if($this->status['access_status']){ echo 'disabled="true"'; }?>
+                />
+            </center>
+        </td>
+        <td>
+            <center>
+            <input type="button" value="Deshabilitar" onclick="disable_access();"
+            <?php if(!$this->status['access_status']){ echo 'disabled="true"'; }?>                   
+                   />
+            </center>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>
+            <input type="button" value="Ver conexiones" onclick="view_connections();" 
+            <?php if(!$this->status['vpn_service']){ echo 'disabled="true"'; }?>
+                />
+            </center>
+
+        </td>
+        <td>
+            <center>
+            <input type="button" value="Histórico de conexiones" onclick="view_last_connections();" 
+                />
+            </center>
+        </td>
+    </tr>
+
+    <tr><td colspan="2">&nbsp;</td></tr>
+    
+    <tr>
+        <td colspan="2">
+            <center><strong>Reglas del firewall</strong></center>
+        </td> 
+    </tr>
+    <tr>
+        <td colspan="2">
+            <center>
+            <input type="button" value="Recargar" onclick="reload_iptables();" 
+                />
+            </center>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <center>
+            <input type="button" value="Ver log iptables" onclick="view_iptables_log();" 
+                />
+            </center>
+        </td>
+    </tr>
+
+    
+    
+</table>
+

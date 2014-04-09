@@ -1,0 +1,14 @@
+<h1><?php echo $this->iconMgr("RESOURCE") ?><?php echo $this->formTitle; ?></h1>
+
+<?php $this->form->setAction($this->url()) ?>
+<?php echo $this->form ?>
+
+<div class="actions">
+    <ul>
+        <li><?php echo $this->iconMgr("BACK") ?>
+            <a href="<?php echo $this->baseUrl()."/webmanage/networkresource"; ?>">
+                Volver al listado
+            </a>
+        </li>
+    </ul>
+</div>

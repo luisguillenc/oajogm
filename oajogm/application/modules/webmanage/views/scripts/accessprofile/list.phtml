@@ -1,0 +1,40 @@
+<h1><?php echo $this->iconMgr("PROFILE").$this->actionTitle; ?></h1>
+
+<?php if(count($this->profiles) > 0) : ?>
+<table class="center">
+    <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th colspan="2">Acciones</th>
+    </tr>
+
+<?php foreach($this->profiles as $profile): ?>
+    <tr>
+        <td><?php echo $profile['name']; ?></td>
+        <td><?php echo $profile['desc']; ?></td>
+
+        <td><a href="<?php echo $this->baseUrl().
+                "/webmanage/accessprofile/modify/name/".$profile['name'];
+        ?>"><?php echo $this->iconMgr("UPDATE") ?></a></td>
+        <td>
+            <a onclick="return confirm('Está seguro de que desea eliminar el perfil')"
+               href="<?php echo $this->baseUrl()."/webmanage/accessprofile/remove/name/".
+                       $profile['name']; ?>"><?php echo $this->iconMgr("DELETE") ?>
+            </a>
+        </td>
+    </tr>
+<?php endforeach; ?>
+</table>
+<?php else: ?>
+No hay perfiles
+<?php endif; ?>
+
+<p/>
+
+<div class="actions">
+    <ul>
+        <li>
+            <?php echo $this->iconMgr("NEW") ?> <a href="<?php echo $this->baseUrl()."/webmanage/accessprofile/create"?>">Crear nuevo perfil</a>
+        </li>
+    </ul>
+</div>

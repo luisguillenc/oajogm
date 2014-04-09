@@ -1,0 +1,27 @@
+<h1><?php echo $this->iconMgr("VIEW_LOG").$this->actionTitle; ?></h1>
+
+<form>
+    <table>
+        <tr>
+            <td>Últimas líneas</td>
+            <td><input type="text" name="number" 
+                       value="<?php echo $this->number; ?>"/>
+            </td>
+            <td><input type="submit" value="Ver"/></td>
+        </tr>
+    </table>
+</form>
+<div class="logiptables">
+<?php echo $this->logIptables; ?>
+</div>
+<p/>
+
+<div class="actions">
+    <ul>
+        <li><?php echo $this->iconMgr("BACK") ?>
+            <a href="<?php echo $this->baseUrl()."/webmanage/gateway/managestatus"; ?>">
+                Volver a estado
+            </a>
+        </li>
+    </ul>
+</div>

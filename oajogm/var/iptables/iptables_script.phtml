@@ -43,6 +43,9 @@ $IPT -A INPUT -p icmp -j ACCEPT
 # acepto tráfico ssh
 $IPT -A INPUT -p tcp --dport 22 -j ACCEPT
 
+# acepto tráfico https
+$IPT -A INPUT -p tcp --dport 443 -j ACCEPT
+
 # acepto tráfico openvpn
 $IPT -A INPUT -p udp --dport $OVPN_PORT -j ACCEPT
 
@@ -67,10 +70,10 @@ $IPT -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 <?php foreach ($this->_clients as $client): ?>
 # regla de <?php echo $client->getName(); ?> 
     <?php if($client->isIptablesLogged()): ?>
-$IPT -A FORWARD -s <?php echo $client->getVpnIp(); ?> -j LOG 
+$IPT -A FORWARD -s <?php echo $client->getVpnIp(); ?> -j LOG --log-prefix "oajog: "
     <?php endif; ?>
 $IPT -A FORWARD -s <?php echo $client->getVpnIp(); ?> -j Profile_<?php echo $client->getProfile()->getName(); ?> 
 <?php endforeach; ?>
 
 # antes de descartar logeo por si viene de vpn para localizar intentos frustrados
-$IPT -A FORWARD -s $VPN_NETWORK -j LOG
+$IPT -A FORWARD -s $VPN_NETWORK -j LOG --log-prefix "oajog: "

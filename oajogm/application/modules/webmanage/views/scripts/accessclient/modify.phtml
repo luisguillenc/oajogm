@@ -1,0 +1,25 @@
+<h1><?php echo $this->iconMgr("CLIENT") ?><?php echo $this->formTitle; ?></h1>
+
+<?php $this->form->setAction($this->url()) ?>
+<?php echo $this->form ?>
+<script>
+    function view_user_connections() {
+            this.document.location.href = "<?php
+            echo $this->baseUrl()."/webmanage/gateway/listuserlogins/name/";
+            ?>" + document.forms["access_client"]["name"].value
+    }
+</script>
+<center>
+<form id="view_resource">
+    <input type="button" onclick="view_user_connections();" value="Mostrar histórico conexiones"/>
+</form>
+
+<div class="actions">
+    <ul>
+        <li><?php echo $this->iconMgr("BACK") ?>
+            <a href="<?php echo $this->baseUrl()."/webmanage/accessclient"; ?>">
+                Volver al listado
+            </a>
+        </li>
+    </ul>
+</div>

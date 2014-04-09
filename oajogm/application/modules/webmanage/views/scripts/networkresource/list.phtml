@@ -1,0 +1,60 @@
+<h1><?php echo $this->iconMgr("RESOURCE").$this->actionTitle; ?></h1>
+
+<?php if(count($this->resources) > 0) : ?>
+<table class="center">
+    <tr>
+        <th>Nombre</th>
+        <th>Tipo</th>
+        <th>Descripción</th>
+        <th colspan="2">Acciones</th>
+    </tr>
+
+<?php foreach($this->resources as $resource): ?>
+    <tr>
+        <td><?php echo $resource['name']; ?></td>
+        <td><?php echo $resource['type']; ?></td>
+        <td><?php echo $resource['desc']; ?></td>
+
+        <td><a href="<?php echo $this->baseUrl().
+                "/webmanage/networkresource/modify/name/".$resource['name'];
+        ?>"><?php echo $this->iconMgr("UPDATE") ?></a></td>
+        <td>
+            <a onclick="return confirm('Está seguro de que desea eliminar el recurso')"
+               href="<?php echo $this->baseUrl()."/webmanage/networkresource/remove/name/".
+                       $resource['name']; ?>"><?php echo $this->iconMgr("DELETE") ?>
+            </a>
+        </td>
+
+    </tr>
+<?php endforeach; ?>
+</table>
+<?php else: ?>
+No hay recursos
+<?php endif; ?>
+
+<p/>
+
+<div class="actions">
+
+    
+    <ul>
+        <li>
+            <script>
+                function submit_new_resource() {
+                        this.document.location.href = "<?php
+                        echo $this->baseUrl()."/webmanage/networkresource/create/type/";
+                        ?>" + document.forms["new_resource"]["type"].value
+                }
+            </script>
+            
+            <form id="new_resource">
+                <?php echo $this->iconMgr("NEW") ?> <a href="javascript:submit_new_resource()">Crear nuevo</a>
+                <select name="type">
+                    <option value="host">host</option>
+                    <option value="subnet">subnet</option>
+                    <option value="range">range</option>
+                </select>
+            </form>
+        </li>
+    </ul>
+</div>

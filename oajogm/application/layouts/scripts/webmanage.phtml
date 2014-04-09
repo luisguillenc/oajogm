@@ -1,0 +1,39 @@
+<?php echo $this->doctype() ?>
+<html>
+    <head>
+<?php
+    $this->headMeta()->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8');
+    $this->headLink()->appendStylesheet($this->baseUrl() . '/css/bsd.css');
+    $this->headLink()->appendStylesheet($this->baseUrl() . '/css/messages.css');
+    $this->headTitle()->prepend('OAJ Operations Gateway Manager');
+?>
+        <?php echo $this->headMeta() ?>
+        <?php echo $this->headTitle() ?>
+        <?php echo $this->headLink() ?>
+        <?php echo $this->headStyle() ?>
+        <?php echo $this->headScript() ?>
+        
+    </head>
+<body>
+    <div id="header">
+        <h1>OAJogm Gestión Web</h1>
+<?php if(Zend_Auth::getInstance()->hasIdentity()) : ?>
+        <h4>Bienvenido, <?php echo Zend_Auth::getInstance()->getIdentity(); ?></h4>
+<?php endif; ?>
+    </div>
+<?php if(Zend_Auth::getInstance()->hasIdentity()) : ?>
+	<div id="menubar"><?php echo $this->render('_managemenu.phtml'); ?>  </div>
+<?php endif; ?>
+<?php //if($this->flashMessenger):
+        ?>
+        <div id="contenido">
+        <div id="messages"><?php  echo $this->flashMessenger(); ?></div>
+<?php //endif;
+?>  
+            <?php echo $this->layout()->content; ?>
+        </div>
+        <div id="footer">
+            <strong>(c) Luis Guillén Civera</strong>
+        </div>
+    </body>
+</html>

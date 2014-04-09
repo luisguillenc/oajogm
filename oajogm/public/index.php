@@ -1,6 +1,8 @@
 <?php
 
-set_include_path(".:/usr/share/php:/usr/share/pear:/usr/local/Zend/library");
+set_include_path(".:/usr/share/php:/usr/share/pear".
+        ":/usr/local/Zend/library:/usr/local/Zend/extras/library"
+        );
 
 // Define path to application directory
 defined('APPLICATION_PATH')

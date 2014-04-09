@@ -55,7 +55,7 @@ class Core_Service_NetworkResourceManager {
         Core_Model_AuditHelper::createInfo($host);
         $this->_repository->persist($host);
         
-        Core_Model_AuditHelper::log("Crear recurso host" , $host->toArray());
+        Core_Model_AuditHelper::log("Creado recurso host $name" , $host->toArray());
         
         return $host;
     }
@@ -82,7 +82,7 @@ class Core_Service_NetworkResourceManager {
         Core_Model_AuditHelper::createInfo($subnet);
         $this->_repository->persist($subnet);
         
-        Core_Model_AuditHelper::log("Crear recurso subnet" , $subnet->toArray());
+        Core_Model_AuditHelper::log("Crear recurso subnet $name" , $subnet->toArray());
         
         return $subnet;
     }
@@ -107,7 +107,7 @@ class Core_Service_NetworkResourceManager {
         Core_Model_AuditHelper::createInfo($range);
         $this->_repository->persist($range);
         
-        Core_Model_AuditHelper::log("Crear recurso range" , $range->toArray());
+        Core_Model_AuditHelper::log("Crear recurso range $name" , $range->toArray());
         
         return $range;
     }
@@ -149,11 +149,20 @@ class Core_Service_NetworkResourceManager {
         }
         
         $this->_repository->remove($resource);
-        Core_Model_AuditHelper::log("Eliminar recurso" , $name);        
+        Core_Model_AuditHelper::log("Eliminado recurso $name" , $name);        
     }
     
     
     /**
+     * args:
+     *      name
+     *      type
+     *      desc
+     *      ipaddr
+     *      netaddr
+     *      netmask
+     *      beginip
+     *      endip
      * 
      * @param array $args
      * @return array
@@ -207,6 +216,14 @@ class Core_Service_NetworkResourceManager {
     }
     
     /**
+     * args:
+     *      name
+     *      desc
+     *      ipaddr
+     *      netaddr
+     *      netmask
+     *      beginip
+     *      endip
      * 
      * @param array $args
      * @return array
@@ -248,12 +265,14 @@ class Core_Service_NetworkResourceManager {
 
         Core_Model_AuditHelper::updateInfo($resource);
         $this->_repository->persist($resource);
-        Core_Model_AuditHelper::log("Modificado recurso" , $resource->toArray());
+        Core_Model_AuditHelper::log("Modificado recurso ".$resource->getName() , $resource->toArray());
 
         return $resource->toArray();
     }
     
     /**
+     * args:
+     *      name
      * 
      * @param array $args
      * @return int
@@ -267,6 +286,8 @@ class Core_Service_NetworkResourceManager {
     }
     
     /**
+     * args:
+     *      name
      * 
      * @param array $args
      * @return array

@@ -1,0 +1,51 @@
+
+/* MESSAGES
+
+*******************************************************************************/
+
+.error,
+a.error span,
+.required,
+.validation-advice      { color:#D40707 !important; font-style:bold !important; }
+.notice                 { color:#ea7601}
+.messages ul            { border:0 !important; }
+
+.messages li {
+  min-height:23px !important;
+  margin-bottom:11px !important;
+  padding:8px 8px 2px 32px !important;
+  font-size:.95em !important;
+  font-weight:bold !important;
+  list-style:none;
+  }
+
+.messages ul li {
+/*  margin:0 0 3px 0 !important; */
+  border:0 !important;
+  padding:0 !important;
+  }
+
+.error-msg {
+  border:1px solid #f16048 !important;
+  color:#df280a !important;
+  background:#faebe7 url(../images/icons/error_msg_icon.gif) no-repeat 10px 10px !important;
+  }
+
+.success-msg {
+  border:1px solid #95a486 !important;
+  color:#3d6611 !important;
+  background:#eff5ea url(../images/icons/success_msg_icon.gif) no-repeat 10px 10px !important;
+  }
+
+.notice-msg {
+  border:1px solid #ffd967 !important;
+  background:#fffbf0 url(../images/icons/note_msg_icon.gif) no-repeat 10px 10px !important;
+  color:#3d6611 !important;
+  }
+
+.warning-msg {
+  border:1px solid #666e73 !important;
+  background:#e6e6e6 url(../images/icons/warning_msg_icon.gif) no-repeat 10px 10px !important;
+  color:#000000 !important;
+  }
+

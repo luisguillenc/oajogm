@@ -1,0 +1,76 @@
+<h1><?php echo $this->iconMgr("PROFILE").$this->actionTitle; ?></h1>
+
+<script>
+    function add_resources() {
+        var options = document.getElementById('addresources'), count = 0;
+        for (var i=0; i < options.length; i++) {
+          if (options[i].selected) count++;
+        }
+        if(count === 0) {
+            return;
+        }
+        
+        document.forms["modifyresources"].action = "<?php
+            echo $this->baseUrl()."/webmanage/accessprofile/addresource";
+            ?>";
+        document.forms["modifyresources"].submit();
+    }
+    function remove_resources() {
+        var options = document.getElementById('delresources'), count = 0;
+        for (var i=0; i < options.length; i++) {
+          if (options[i].selected) count++;
+        }
+        if(count === 0) {
+            return;
+        }
+
+        document.forms["modifyresources"].action = "<?php
+            echo $this->baseUrl()."/webmanage/accessprofile/removeresource";
+            ?>";
+        document.forms["modifyresources"].submit();
+    }
+    
+</script>
+
+<form id="modifyresources" method="POST">
+    <table class="center">
+    <tr>
+        <th>Recursos incluidos</th>
+        <th>Acciones</th>
+        <th>Recursos excluidos</th>
+    </tr>
+
+    <tr>
+        <td>
+            <select multiple id="delresources" name="delresources[]">
+                <?php foreach($this->resources as $resource): ?>
+                <option value="<?php echo $resource['name']; ?>"><?php echo $resource['name']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </td>
+        <td>
+            <input id="b_addresource" type="button" value="<<" onclick="add_resources();"/>
+            <input id="b_delresource" type="button" value=">>" onclick="remove_resources();"/>
+            <input name="prfname" type="hidden" value="<?php echo $this->profile['name'] ?>"/>
+        </td>
+        <td>
+            <select multiple id="addresources" name="addresources[]">
+                <?php foreach($this->available as $resource): ?>
+                <option value="<?php echo $resource['name']; ?>"><?php echo $resource['name']; ?></option>
+                <?php endforeach; ?>
+
+            </select>
+        </td>
+
+    </tr>
+</table>
+</form>
+<p/>
+
+<div class="actions">
+    <ul>
+        <li>
+            <?php echo $this->iconMgr("BACK") ?> <a href="<?php echo $this->baseUrl()."/webmanage/accessprofile/modify/name/".$this->profile['name']?>">Volver al perfil</a>
+        </li>
+    </ul>
+</div>

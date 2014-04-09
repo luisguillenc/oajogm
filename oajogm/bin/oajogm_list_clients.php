@@ -9,7 +9,7 @@ $cliMgr = $sm->getService('access_client_manager');
 $clients = $cliMgr->listClients();
 foreach($clients as $client) {
     $line= $client['name']."\t";
-    $line.= $client['profile']."\t";
+    $line.= $client['prfname']."\t";
     $line.= $client['ipaddr']."\t";
     if($client['locked']) {
         $line.= "yes\t";

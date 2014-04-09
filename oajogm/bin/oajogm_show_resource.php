@@ -38,20 +38,19 @@ if(empty($resource)) {
     exit(2);
 }
 
-echo "id: ".$resource['id']."\n";
 echo "name: ".$resource['name']."\n";
 echo "type: ".$resource['type']."\n";
 switch($resource['type']) {
     case 'host':
-        echo "ip_addr: ".$resource['ip']."\n";
+        echo "ipaddr: ".$resource['ipaddr']."\n";
         break;
     case 'subnet':
-        echo "net_addr: ".$resource['network_addr']."\n";
-        echo "net_mask: ".$resource['network_mask']."\n";
+        echo "netaddr: ".$resource['netaddr']."\n";
+        echo "netmask: ".$resource['netmask']."\n";
         break;
     case 'range':
-        echo "begin_ip: ".$resource['begin_ip']."\n";
-        echo "end_ip: ".$resource['end_ip']."\n";
+        echo "beginip: ".$resource['beginip']."\n";
+        echo "endip: ".$resource['endip']."\n";
         break;
 }
 echo "desc: ".$resource['desc']."\n";

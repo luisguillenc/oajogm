@@ -17,9 +17,10 @@ class Core_Model_GatewayOperatorLocal
     const OVPNSERVICE = "oajog_ovpnservice.sh";
     const OVPNMGMT = "oajog_ovpnmgmt.sh";
     const IPTABLESCFG = "oajog_iptablescfg.sh";
+    const IPTABLESLOG = "oajog_iptableslog.sh";
     
     /** @var string */
-    protected static $_pathCommand;
+    protected static $_pathCommand = "";
     
     
     public static function setPathCommand($pathCommand) {
@@ -34,13 +35,17 @@ class Core_Model_GatewayOperatorLocal
 
     }
     
+    protected function _execCommand($cmdExec, &$output, &$exitStatus) {
+        exec($cmdExec, $output, $exitStatus);
+    }
+    
     /**
      * @param string $name
      */
     public function disconnectClient($name) {
         $cmdExec = self::$_pathCommand."/".self::OVPNMGMT." disconnect $name";
-        $output = array();
-        exec($cmdExec, $output, $exitStatus);
+        $output = array(); $exitStatus = 0;
+        $this->_execCommand($cmdExec, $output, $exitStatus);
         if($exitStatus != 0) {
             throw new Core_Model_Exception("Error enviando desconexion");
         }
@@ -59,8 +64,8 @@ class Core_Model_GatewayOperatorLocal
     public function getConnectedClients() {
         
         $cmdExec = self::$_pathCommand."/".self::OVPNMGMT." list";
-        $output = array();
-        exec($cmdExec, $output, $exitStatus);
+        $output = array(); $exitStatus = 0;
+        $this->_execCommand($cmdExec, $output, $exitStatus);
         if($exitStatus != 0) {
             throw new Core_Model_Exception("Error obteniendo clientes conectados");
         }
@@ -96,8 +101,8 @@ class Core_Model_GatewayOperatorLocal
      */
     public function reloadIptablesRules() {
         $cmdExec = self::SUDO." ".self::$_pathCommand."/".self::IPTABLESCFG." reload";
-        $output = array();
-        exec($cmdExec, $output, $exitStatus);
+        $output = array(); $exitStatus = 0;
+        $this->_execCommand($cmdExec, $output, $exitStatus);
         if($exitStatus != 0) {
             return false;
         }
@@ -105,13 +110,39 @@ class Core_Model_GatewayOperatorLocal
         return true;
     }
 
+    public function viewIptablesLog($number = 0) {
+        if(is_numeric(!$number)) {
+            //para evitar inyección de código
+            throw new Core_Model_Exception("Argumento inválido");
+        }
+        
+        if($number > 0) {
+            $cmdExec = self::$_pathCommand."/".self::IPTABLESLOG." $number";
+        } else {
+            $cmdExec = self::$_pathCommand."/".self::IPTABLESLOG;
+        }
+
+        $output = array(); $exitStatus = 0;
+        $this->_execCommand($cmdExec, $output, $exitStatus);
+        if($exitStatus != 0) {
+            throw new Core_Model_Exception("Error obteniendo log iptables");
+        }
+        
+        $retStr = "";
+        foreach($output as $line) {
+            $retStr.="$line\n";
+        }
+        
+        return $retStr;
+    }
+    
     /**
      * @return boolean
      */
     public function start() {
         $cmdExec = self::SUDO." ".self::$_pathCommand."/".self::OVPNSERVICE." start";
-        $output = array();
-        exec($cmdExec, $output, $exitStatus);
+        $output = array(); $exitStatus = 0;
+        $this->_execCommand($cmdExec, $output, $exitStatus);
         if($exitStatus != 0) {
             return false;
         }
@@ -124,8 +155,8 @@ class Core_Model_GatewayOperatorLocal
      */
     public function stop() {
         $cmdExec = self::SUDO." ".self::$_pathCommand."/".self::OVPNSERVICE." stop";
-        $output = array();
-        exec($cmdExec, $output, $exitStatus);
+        $output = array(); $exitStatus = 0;
+        $this->_execCommand($cmdExec, $output, $exitStatus);
         if($exitStatus != 0) {
             return false;
         }
@@ -138,8 +169,8 @@ class Core_Model_GatewayOperatorLocal
      */
     public function isRunning() {
         $cmdExec = self::SUDO." ".self::$_pathCommand."/".self::OVPNSERVICE." status";
-        $output = array();
-        exec($cmdExec, $output, $exitStatus);
+        $output = array(); $exitStatus = 0;
+        $this->_execCommand($cmdExec, $output, $exitStatus);
         if($exitStatus != 0) {
             return false;
         }

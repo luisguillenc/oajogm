@@ -222,7 +222,7 @@ class Core_Model_AccessClient
             $data['audit_info'] = $this->getAuditInfo()->toArray();
         }
         $data['ipaddr'] = $this->_vpnIp->__toString();
-        $data['profile'] = $this->_profile->getName();
+        $data['prfname'] = $this->_profile->getName();
         $data['locked'] = $this->isLocked();
         $data['iptableslogged'] = $this->isIptablesLogged();
         

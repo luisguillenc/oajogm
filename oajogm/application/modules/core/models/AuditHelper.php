@@ -28,10 +28,13 @@ class Core_Model_AuditHelper
      * @return string 
      */
     private static function getUsername() {
-        //cli
         $euid = posix_geteuid();
         $userData = posix_getpwuid($euid);
-        return $userData['name'];
+        if($userData['name'] == "www-data") {
+            return Zend_Auth::getInstance()->getIdentity(); 
+        } else {
+            return $userData['name'];
+        }
     }
 
     /**

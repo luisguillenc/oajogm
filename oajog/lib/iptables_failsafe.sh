@@ -41,6 +41,10 @@ $IPT -A INPUT -p icmp -j ACCEPT
 # acepto tráfico ssh
 $IPT -A INPUT -p tcp --dport 22 -j ACCEPT
 
+# acepto tráfico https
+$IPT -A INPUT -p tcp --dport 443 -j ACCEPT
+
+
 # acepto conexiones entrantes relacionadas
 $IPT -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 

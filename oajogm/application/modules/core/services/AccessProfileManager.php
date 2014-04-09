@@ -96,7 +96,7 @@ class Core_Service_AccessProfileManager {
 
         Core_Model_AuditHelper::createInfo($profile);
         $this->_repository->persist($profile);
-        Core_Model_AuditHelper::log("Creado perfil" , $profile->toArray());
+        Core_Model_AuditHelper::log("Creado perfil $name" , $profile->toArray());
         
         return $profile;
     }
@@ -114,7 +114,7 @@ class Core_Service_AccessProfileManager {
         }
         
         $this->_repository->remove($profile);
-        Core_Model_AuditHelper::log("Eliminado perfil" , $name);        
+        Core_Model_AuditHelper::log("Eliminado perfil $name" , $name);        
     }
     
     /**
@@ -134,7 +134,7 @@ class Core_Service_AccessProfileManager {
 
         Core_Model_AuditHelper::updateInfo($profile);
         $this->_repository->persist($profile);
-        Core_Model_AuditHelper::log("Agregado recurso" , "$rscName a $prfName");
+        Core_Model_AuditHelper::log("Agregado recurso $rscName a $prfName" , "$rscName a $prfName");
         
         return $profile;
     }
@@ -156,7 +156,7 @@ class Core_Service_AccessProfileManager {
 
         Core_Model_AuditHelper::updateInfo($profile);
         $this->_repository->persist($profile);
-        Core_Model_AuditHelper::log("Eliminado recurso" , "$rscName de $prfName");
+        Core_Model_AuditHelper::log("Eliminado recurso $rscName de $prfName" , "$rscName de $prfName");
         
         return $profile;
     }
@@ -165,6 +165,9 @@ class Core_Service_AccessProfileManager {
     
 
     /**
+     * args:
+     *      name
+     *      desc
      * 
      * @param array $args
      * @return array
@@ -185,6 +188,9 @@ class Core_Service_AccessProfileManager {
     }
 
     /**
+     * args:
+     *      name
+     *      desc
      * 
      * @param array $args
      * @return array
@@ -200,12 +206,14 @@ class Core_Service_AccessProfileManager {
             $profile->setDesc($args['desc']);
             Core_Model_AuditHelper::updateInfo($profile);
             $this->_repository->persist($profile);
-            Core_Model_AuditHelper::log("Modificado perfil" , $profile->toArray());
+            Core_Model_AuditHelper::log("Modificado perfil ".$profile->getName() , $profile->toArray());
         }
         return $profile->toArray();
     }
 
     /**
+     * args:
+     *      name
      * 
      * @param array $args
      * @return int
@@ -219,6 +227,9 @@ class Core_Service_AccessProfileManager {
     }
 
     /**
+     * args:
+     *      prfname
+     *      rscname
      * 
      * @param array $args
      * @return array
@@ -233,6 +244,9 @@ class Core_Service_AccessProfileManager {
     }
     
     /**
+     * args:
+     *      prfname
+     *      rscname
      * 
      * @param array $args
      * @return array
@@ -261,6 +275,8 @@ class Core_Service_AccessProfileManager {
     }
     
     /**
+     * args:
+     *      name
      * 
      * @param array $args
      * @return array

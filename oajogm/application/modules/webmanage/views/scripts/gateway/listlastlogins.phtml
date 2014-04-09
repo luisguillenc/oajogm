@@ -1,0 +1,42 @@
+<h1><?php echo $this->iconMgr("VIEW_LOG").$this->actionTitle; ?></h1>
+
+<form>
+    <table>
+        <tr>
+            <td>Últimas conexiones</td>
+            <td><input type="text" name="number" 
+                       value="<?php echo $this->number; ?>"/>
+            </td>
+            <td><input type="submit" value="Ver"/></td>
+        </tr>
+    </table>
+</form>
+<?php if(count($this->lastLogins) > 0) : ?>
+<table class="center">
+    <tr>
+        <th>Acceso</th>
+        <th>Cliente</th>
+    </tr>
+
+<?php foreach($this->lastLogins as $login): ?>
+    <tr>
+        <td><?php echo $login['timestamp']; ?></td>
+        <td><?php echo $login['name']; ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+<?php else: ?>
+No hay logins
+<?php endif; ?>
+
+<p/>
+
+<div class="actions">
+    <ul>
+        <li><?php echo $this->iconMgr("BACK") ?>
+            <a href="<?php echo $this->baseUrl()."/webmanage/gateway/managestatus"; ?>">
+                Volver a estado
+            </a>
+        </li>
+    </ul>
+</div>

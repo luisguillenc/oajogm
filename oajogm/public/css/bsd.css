@@ -1,0 +1,213 @@
+/*
+======================
+BSD THEME
+======================
+
+Un tema de colores rojos, hecho en CSS para Tutorial de CSS: Cascading Style Sheets
+
+(C)opyLeft 2004, Toad
+*/
+
+html>body {
+	background-color: #fff;
+	font-family: "Book Antiqua", Georgia, Palatino, "Times New Roman", Times, serif;
+	font-size: 15px;
+	margin-left: 5px;
+	margin-top: 5px;
+}
+
+
+#header h1 {
+	border: dashed 1px #a00000;
+	background-color: #ccc;
+	color: #a00000;
+	margin-top: 0px;
+	font-size: 24pt;
+}
+
+/*
+#header h1 {
+    background-image: url(../images/header.jpg);
+}
+*/
+h4 {
+	color: #a00000;
+	font-style: oblique;
+	font-size: 16px;
+}
+
+#menubar {
+	top: 100px;
+	background-color: #fff;
+	width: 200px;
+	border: dashed 1px #a00000;
+}
+
+#menubar h4 {
+	margin-top: 1px;
+	text-align: center;
+	font-style: normal;
+}
+#menubar a {
+	text-align: center;
+	font-style: normal;
+}
+
+#contenido {
+	position: absolute;
+	top: 100px;
+	left: 220px;
+}
+
+#contenido h2 {
+	margin-top: 1px;
+	color: #000;
+	border-bottom: solid 2px #a00000;
+
+}
+#contenido p {
+	line-height: 1.5em;
+}
+
+
+#contenido .errortext{
+	text-align: left;
+	font-size: 10px;
+	color: #a00000;
+}
+
+#contenido .campoformulario{
+	text-align: left;
+	color: #a00000;
+
+}
+
+#contenido h1 {
+	border: none;
+	font-weight: bold;
+	font-size: 20px;
+	background-color: #ccc;
+	color: #a00000;
+	text-align: center;
+	border-bottom: solid 2px #a00000;
+}
+
+#contenido table.center {
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#contenido th {
+	text-align: center;
+	font-weight: bold;
+}
+
+#contenido td{
+	text-align: left;
+	background-color: #ccc;
+}
+
+#contenido .actions{
+	font-weight: bold;
+	background-color: #ccc;
+	color: #a00000;
+	text-align: center;
+	border-top: solid 2px #a00000;
+}
+#contenido .actions li {
+        list-style-type: none;
+}
+
+#contenido dt{
+	text-align: left;
+}
+
+#contenido dt .required{
+	text-align: left;
+	color: #a00000;
+}
+
+
+a {
+	color: #009;
+	text-decoration: underline;
+}
+a:hover {
+	color: #a00000;
+	text-decoration: underline;
+	border-bottom: solid 1px #a00000;
+}
+acronym {
+	cursor: help;
+	font-style: oblique;
+	border-bottom: solid 1px #333;
+	color: #333;
+}
+
+strong {
+	font-weight: bold;
+}
+
+li {
+	list-style-type : square;
+	margin-bottom: 7px;
+}
+
+code {
+	font-family: Courier, "Courier New", Monaco, mono;
+	color: #a00000;
+}
+code span {
+	color: #060;
+}
+.subrayado {
+	text-decoration: underline;
+}
+.porencima {
+	text-decoration: overline;
+}
+.tachado {
+	text-decoration: line-through;
+}
+.cursiva {
+	font-style: italic;
+}
+.oblicuo {
+	font-style: oblique;
+}
+.negrita {
+	font-weight: bold;
+}
+.negritagruesa {
+	font-weight: bolder;
+}
+.ligero {
+	font-weight: lighter;
+}
+.cien {
+	font-weight: 100;
+}
+.versales {
+	font-size: 20px;
+	font-variant: small-caps;
+}
+.espaciado {
+	font-size: 20px;
+	letter-spacing: 5px;
+}
+.indentacion {
+	font-size: 20px;
+	text-indent: 3cm;
+}
+.colorfondo {
+	background-color: rgb(200,200,255);
+}
+.miborde {
+border-top: solid 2px #a00000;
+border-bottom: outset 3px #a00000;
+border-left: dotted 2px #a00000;
+border-right: dashed 2px #a00000;
+font-size: 20px;
+color: #a00000;
+font-variant: small-caps;
+}

@@ -8,8 +8,7 @@ $prfMgr = $sm->getService('access_profile_manager');
 
 $profiles = $prfMgr->listProfiles();
 foreach($profiles as $profile) {
-    $line = $profile['id']."\t";
-    $line.= $profile['name']."\t";
+    $line= $profile['name']."\t";
     $line.= $profile['desc']."\n";
     echo $line;
 }

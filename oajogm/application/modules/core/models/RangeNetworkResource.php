@@ -74,8 +74,8 @@ class Core_Model_RangeNetworkResource
      */
     public function toArray() {
         $data = parent::toArray();
-        $data['begin_ip'] = $this->_begin->__toString();
-        $data['end_ip'] = $this->_end->__toString();
+        $data['beginip'] = $this->_begin->__toString();
+        $data['endip'] = $this->_end->__toString();
         
         return $data;
     }
