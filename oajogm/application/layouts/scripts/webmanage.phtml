@@ -16,7 +16,7 @@
     </head>
 <body>
     <div id="header">
-        <h1>OAJogm Gestión Web</h1>
+        <h1><img src="<?php echo $this->baseUrl()."/images/logo-cefca.gif"; ?>"/>OAJogm Gestión Web</h1>
 <?php if(Zend_Auth::getInstance()->hasIdentity()) : ?>
         <h4>Bienvenido, <?php echo Zend_Auth::getInstance()->getIdentity(); ?></h4>
 <?php endif; ?>
@@ -33,7 +33,7 @@
             <?php echo $this->layout()->content; ?>
         </div>
         <div id="footer">
-            <strong>(c) Luis Guillén Civera</strong>
+            <strong>by Luis Guillén Civera</strong>
         </div>
     </body>
 </html>
