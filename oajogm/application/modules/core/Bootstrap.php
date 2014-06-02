@@ -39,6 +39,12 @@ class Core_Bootstrap extends Zend_Application_Module_Bootstrap {
         } else {
             $gatewaySharedKey = "";
         }
+
+        if($gatewayCfg->get('isslave')) {
+            $disableWrites = $gatewayCfg->isslave;
+        } else {
+            $disableWrites = false;
+        }
         
         Core_Model_IptablesCompiler::setTemplate($pathsCfg->iptablestpl);
         
@@ -62,7 +68,12 @@ class Core_Bootstrap extends Zend_Application_Module_Bootstrap {
             Core_Model_GatewayOperatorSsh::setPathSshKeys($pathsCfg->sshkeys);
             $operatorGw = new Core_Model_GatewayOperatorSsh($sshOpts);
         }
-
+        
+        if($disableWrites) {
+            Core_Model_NetworkResourceDbRepository::disableWrites();
+            Core_Model_AccessProfileDbRepository::disableWrites();
+            Core_Model_AccessClientDbRepository::disableWrites();
+        }
         
         //inicializamos las clases del model
         $networkResourceRepository = 

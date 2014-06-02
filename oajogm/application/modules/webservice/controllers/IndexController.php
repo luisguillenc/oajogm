@@ -3,6 +3,8 @@
 class Webservice_IndexController extends Zend_Controller_Action
 {
 
+    protected $_disableWrites = false;
+    
     public function init()
     {
         $this->_helper->layout->disableLayout();
@@ -11,6 +13,16 @@ class Webservice_IndexController extends Zend_Controller_Action
         $this->_checkAuth();
     }
     
+    protected function _checkWrites() {
+        $gatewayCfg = Zend_Registry::get("gatewayCfg");
+        if($gatewayCfg->get('isslave')) {
+            $disableWrites = $gatewayCfg->isslave;
+        } else {
+            $disableWrites = false;
+        }
+
+        return ($disableWrites == false);
+    }
     
     protected function _checkAuth() {
         $sm = LGC_Service_Manager::getInstance();
@@ -40,7 +52,9 @@ class Webservice_IndexController extends Zend_Controller_Action
         
         $sm = LGC_Service_Manager::getInstance();
         $cnMgr = $sm->getService('connection_manager');
-        $cnMgr->notifyDisconnect($name);
+        if($this->_checkWrites()) {
+            $cnMgr->notifyDisconnect($name);
+        }
         $this->getResponse()->setHeader('Content-Type', 'text/plain');
         $this->getResponse()->setBody("0");        
     }
@@ -74,8 +88,9 @@ class Webservice_IndexController extends Zend_Controller_Action
         $cnMgr = $sm->getService('connection_manager');
 
         $configScript = $cnMgr->getClientConfigScript($name);
-        $cnMgr->notifyConnect($name);
-        
+        if($this->_checkWrites()) {
+            $cnMgr->notifyConnect($name);
+        }
         $this->getResponse()->setHeader('Content-Type', 'text/plain');
         $this->getResponse()->setBody($configScript);
     }
